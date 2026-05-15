@@ -1,0 +1,41 @@
+# Playbook: Ransomware Detection
+# Source: MITRE ATT&CK T1486, T1490 + Sigma Rules
+id: PB-006
+name: 'Ransomware Detection & Response'
+mitre_tactics: ['Impact']
+mitre_techniques: ['T1486', 'T1490', 'T1489']
+trigger_rules: ['Ransomware Activity', 'Mass File Encryption', 'Volume Shadow Copy Deletion', 'Backup Deletion']
+severity_threshold: critical
+
+investigation_steps:
+  - id: 1
+    title: 'URGENCE — Confirmer l activité ransomware'
+    description: 'Vérifier les indicateurs : mass file rename, extension inconnue, ransom note'
+    expected_finding: 'Volume de modifications fichiers anormalement élevé (>1000/h)'
+    critical: true
+    escalate_if_found: true
+
+  - id: 2
+    title: 'URGENCE — Vérifier suppression des backups'
+    description: 'Chercher vssadmin delete shadows, wbadmin delete, bcdedit changes'
+    expected_finding: 'Suppression des Volume Shadow Copies = ransomware confirmé'
+    critical: true
+    escalate_if_found: true
+
+  - id: 3
+    title: 'Identifier le vecteur d entrée'
+    description: 'Comment le ransomware est arrivé ? Email, exploit, RDP ?'
+    expected_finding: 'Chaîne d infection : phishing → macro → dropper → ransomware'
+    critical: false
+
+  - id: 4
+    title: 'Évaluer l étendue de l infection'
+    description: 'Chercher des signes d infection sur d autres machines du réseau'
+    expected_finding: 'Même hash présent sur d autres endpoints'
+    critical: true
+    escalate_if_found: true
+
+remediation:
+  immediate: ['ISOLER IMMÉDIATEMENT tous les endpoints infectés', 'Couper les partages réseau', 'Alerter le RSSI et la direction']
+  short_term: ['Activer le plan de réponse ransomware', 'Contacter l assurance cyber', 'Préserver les preuves forensiques']
+  long_term: ['Revoir la stratégie de backup (3-2-1)', 'Implémenter EDR avec anti-ransomware', 'Exercice de simulation ransomware']

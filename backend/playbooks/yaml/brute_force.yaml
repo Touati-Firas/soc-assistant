@@ -1,0 +1,45 @@
+# Playbook: Brute Force Detection
+# Source: MITRE ATT&CK T1110 + Sigma Rule "Multiple Failed Logins"
+id: PB-001
+name: 'Brute Force Detection'
+mitre_tactics: ['Credential Access']
+mitre_techniques: ['T1110', 'T1110.001', 'T1110.002', 'T1110.003']
+trigger_rules: ['Multiple Failed Logins', 'Brute Force Activity', 'Password Spraying', 'AD - Compte utilisateur verrouillé', 'Possible Brute Force SMB Login détecté', 'SSH Brute Force']
+severity_threshold: high
+
+investigation_steps:
+  - id: 1
+    title: 'Identifier la source de l attaque'
+    description: 'Vérifier source.ip et déterminer si IP interne ou externe'
+    expected_finding: 'Multiples tentatives échouées depuis la même IP'
+    critical: false
+
+  - id: 2
+    title: 'Analyser le volume de tentatives'
+    description: 'Compter le nombre de tentatives échouées dans les dernières 24h'
+    expected_finding: 'Plus de 15 tentatives en 5 minutes = brute force confirmé'
+    critical: false
+
+  - id: 3
+    title: 'Vérifier si des comptes ont été compromis'
+    description: 'Chercher des connexions réussies après les échecs depuis la même IP'
+    expected_finding: 'Connexion réussie après série d échecs = compromission probable'
+    critical: true
+    escalate_if_found: true
+
+  - id: 4
+    title: 'Investiguer les comptes ciblés'
+    description: 'Lister tous les user.name ciblés par les tentatives'
+    expected_finding: 'Si multiple comptes ciblés = password spraying (T1110.003)'
+    critical: false
+
+  - id: 5
+    title: 'Vérifier la géolocalisation'
+    description: 'Déterminer l origine géographique de l IP source'
+    expected_finding: 'IP provenant d un pays inhabituel ou d un VPN/Tor'
+    critical: false
+
+remediation:
+  immediate: ['Bloquer IP source sur le firewall', 'Verrouiller comptes ciblés temporairement']
+  short_term: ['Activer MFA sur comptes ciblés', 'Revoir politique de verrouillage de compte']
+  long_term: ['Implémenter rate limiting', 'Déployer solution anti-brute-force (fail2ban)']

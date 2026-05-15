@@ -1,0 +1,47 @@
+# Playbook: Privilege Escalation Detection
+# Source: MITRE ATT&CK T1068, T1134, T1548 + Sigma Rules
+id: PB-002
+name: 'Privilege Escalation Detection'
+mitre_tactics: ['Privilege Escalation', 'Credential Access']
+mitre_techniques: ['T1068', 'T1134', 'T1548', 'T1548.002', 'T1003', 'T1003.006']
+trigger_rules: ['Windows Privilege Escalation', 'Sudo Abuse', 'UAC Bypass', 'Token Manipulation', 'AD - DCSync Attack détecté']
+severity_threshold: high
+
+investigation_steps:
+  - id: 1
+    title: 'Identifier le compte impliqué'
+    description: 'Vérifier user.name et user.id dans l alerte, déterminer le niveau de privilège normal'
+    expected_finding: 'Activité compte non-admin effectuant opération admin'
+    critical: false
+
+  - id: 2
+    title: 'Vérifier l historique d authentification'
+    description: 'Analyser les 24h précédant l alerte pour détecter anomalies'
+    expected_finding: 'Connexions inhabituelles avant l escalade'
+    critical: false
+
+  - id: 3
+    title: 'Analyser le processus déclencheur'
+    description: 'Examiner process.name, process.command_line et process.parent'
+    expected_finding: 'Processus suspect (powershell encoded, cmd.exe spawn, exploit binary)'
+    critical: true
+    escalate_if_found: true
+
+  - id: 4
+    title: 'CRITIQUE — Vérifier persistance'
+    description: 'Chercher création de scheduled tasks, services ou clés de registre'
+    expected_finding: 'Mécanisme de persistance créé après l escalade'
+    critical: true
+    escalate_if_found: true
+
+  - id: 5
+    title: 'Vérifier mouvement latéral'
+    description: 'Chercher des connexions réseau suspectes depuis le host compromis'
+    expected_finding: 'Tentatives de connexion vers d autres machines (SMB, RDP, WinRM)'
+    critical: true
+    escalate_if_found: true
+
+remediation:
+  immediate: ['Révoquer privileges', 'Isoler le endpoint du réseau']
+  short_term: ['Audit GPO', 'Review sudoers/admin groups', 'Forcer reset password']
+  long_term: ['Implémenter PAM (Privileged Access Management)', 'Revoir politique least-privilege']

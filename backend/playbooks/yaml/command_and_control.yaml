@@ -1,0 +1,47 @@
+# Playbook: Command and Control Detection
+# Source: MITRE ATT&CK T1071, T1095, T1573 + Sigma Rules
+id: PB-008
+name: 'Command and Control (C2) Detection'
+mitre_tactics: ['Command and Control']
+mitre_techniques: ['T1071', 'T1071.001', 'T1095', 'T1573', 'T1571']
+trigger_rules: ['Suspicious Beaconing', 'C2 Communication', 'DNS Beaconing', 'Encrypted Channel to Unknown']
+severity_threshold: high
+
+investigation_steps:
+  - id: 1
+    title: 'Analyser le pattern de communication'
+    description: 'Vérifier la régularité des connexions (beaconing) et les volumes'
+    expected_finding: 'Connexions régulières (toutes les X minutes) = beaconing C2'
+    critical: true
+    escalate_if_found: true
+
+  - id: 2
+    title: 'Classifier la destination'
+    description: 'Vérifier la réputation de l IP/domaine de destination'
+    expected_finding: 'IP/domaine inconnu, récemment créé, ou associé à des malwares'
+    critical: false
+
+  - id: 3
+    title: 'Identifier le processus source'
+    description: 'Quel processus initie la communication C2 ?'
+    expected_finding: 'Processus légitime détourné (svchost, rundll32) ou binaire inconnu'
+    critical: true
+    escalate_if_found: true
+
+  - id: 4
+    title: 'Analyser le protocole'
+    description: 'HTTP/HTTPS, DNS, ou protocole custom ? Présence de chiffrement ?'
+    expected_finding: 'DNS avec payload anormal, HTTPS vers IP directe, ou protocole non-standard'
+    critical: false
+
+  - id: 5
+    title: 'Évaluer l impact'
+    description: 'Des commandes ont-elles été exécutées ? Des données exfiltrées ?'
+    expected_finding: 'Exécution de commandes post-C2 ou accès à des fichiers sensibles'
+    critical: true
+    escalate_if_found: true
+
+remediation:
+  immediate: ['Bloquer IP/domaine C2 sur firewall et proxy', 'Isoler le endpoint compromis']
+  short_term: ['Analyse forensique complète', 'Chercher le même C2 sur le parc', 'Reset credentials']
+  long_term: ['Implémenter DNS sinkhole', 'Deploy IDS/IPS signatures', 'Threat hunting périodique']

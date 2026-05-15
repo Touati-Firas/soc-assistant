@@ -1,0 +1,46 @@
+# Playbook: Lateral Movement Detection
+# Source: MITRE ATT&CK T1021, T1076, T1028 + Sigma Rules
+id: PB-003
+name: 'Lateral Movement Detection'
+mitre_tactics: ['Lateral Movement', 'Reconnaissance', 'Discovery']
+mitre_techniques: ['T1021', 'T1021.001', 'T1021.002', 'T1021.006', 'T1570', 'T1595', 'T1082']
+trigger_rules: ['Lateral Movement via SMB', 'PsExec Execution', 'RDP Brute Force', 'WinRM Remote Command', 'Nmap SCAN Detected', 'AD - Commandes reconnaissance']
+severity_threshold: high
+
+investigation_steps:
+  - id: 1
+    title: 'Identifier la machine source et destination'
+    description: 'Vérifier source.ip, destination.ip et les hostnames associés'
+    expected_finding: 'Connexion inhabituelle entre deux machines internes'
+    critical: false
+
+  - id: 2
+    title: 'Analyser le protocole utilisé'
+    description: 'Déterminer si SMB (445), RDP (3389), WinRM (5985/5986) ou SSH (22)'
+    expected_finding: 'Utilisation de protocoles d administration à distance'
+    critical: false
+
+  - id: 3
+    title: 'Vérifier le compte utilisé'
+    description: 'Le compte source est-il légitime pour cette connexion ?'
+    expected_finding: 'Compte utilisé n a jamais accédé à cette machine avant'
+    critical: true
+    escalate_if_found: true
+
+  - id: 4
+    title: 'Chercher des outils de mouvement latéral'
+    description: 'Détecter PsExec, Mimikatz, CrackMapExec, Impacket'
+    expected_finding: 'Présence d outils offensifs sur le host'
+    critical: true
+    escalate_if_found: true
+
+  - id: 5
+    title: 'Mapper l étendue du mouvement'
+    description: 'Identifier toutes les machines contactées par l attaquant'
+    expected_finding: 'Carte complète du mouvement latéral'
+    critical: false
+
+remediation:
+  immediate: ['Isoler machines source et destination', 'Révoquer credentials compromis']
+  short_term: ['Audit des accès réseau internes', 'Désactiver protocoles non nécessaires']
+  long_term: ['Segmentation réseau', 'Implémenter Zero Trust', 'Deploy EDR']

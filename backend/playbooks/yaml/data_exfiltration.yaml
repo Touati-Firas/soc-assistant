@@ -1,0 +1,41 @@
+# Playbook: Data Exfiltration Detection
+# Source: MITRE ATT&CK T1041, T1048, T1567 + Sigma Rules
+id: PB-004
+name: 'Data Exfiltration Detection'
+mitre_tactics: ['Exfiltration']
+mitre_techniques: ['T1041', 'T1048', 'T1048.003', 'T1567', 'T1567.002']
+trigger_rules: ['Large Data Transfer', 'DNS Tunneling', 'Cloud Storage Upload', 'Unusual Outbound Traffic']
+severity_threshold: high
+
+investigation_steps:
+  - id: 1
+    title: 'Quantifier le volume de données'
+    description: 'Analyser network.bytes et destination.bytes pour évaluer le volume transféré'
+    expected_finding: 'Volume anormalement élevé par rapport au baseline de l utilisateur'
+    critical: false
+
+  - id: 2
+    title: 'Identifier la destination'
+    description: 'Vérifier destination.ip et destination.domain, classifier comme interne/externe/cloud'
+    expected_finding: 'Transfert vers IP/domaine externe non reconnu'
+    critical: true
+    escalate_if_found: true
+
+  - id: 3
+    title: 'Analyser le protocole d exfiltration'
+    description: 'DNS tunneling (port 53 avec payload élevé), HTTPS (443), FTP (21), ou cloud storage'
+    expected_finding: 'DNS avec payload > 512 bytes = tunneling suspect'
+    critical: true
+    escalate_if_found: true
+
+  - id: 4
+    title: 'Vérifier les fichiers accédés'
+    description: 'Chercher les file.read events avant l exfiltration'
+    expected_finding: 'Accès massif à des fichiers sensibles'
+    critical: true
+    escalate_if_found: true
+
+remediation:
+  immediate: ['Bloquer la destination IP/domaine', 'Isoler le endpoint', 'Révoquer accès utilisateur']
+  short_term: ['Audit des données accédées', 'Notification RSSI/DPO', 'Analyse forensique du endpoint']
+  long_term: ['Implémenter DLP', 'Revoir les règles de sortie firewall', 'Classifier les données sensibles']

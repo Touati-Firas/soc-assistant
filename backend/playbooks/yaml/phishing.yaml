@@ -1,0 +1,47 @@
+# Playbook: Phishing Detection
+# Source: MITRE ATT&CK T1566, T1534 + Sigma Rules
+id: PB-007
+name: 'Phishing Detection & Response'
+mitre_tactics: ['Initial Access']
+mitre_techniques: ['T1566', 'T1566.001', 'T1566.002', 'T1534']
+trigger_rules: ['Phishing Email Detected', 'Suspicious Email Attachment', 'Malicious URL Click', 'Spear Phishing']
+severity_threshold: medium
+
+investigation_steps:
+  - id: 1
+    title: 'Analyser l email suspect'
+    description: 'Vérifier l expéditeur, le sujet, les headers et les liens'
+    expected_finding: 'Email spoofé, domaine similaire (typosquatting) ou adresse inconnue'
+    critical: false
+
+  - id: 2
+    title: 'Vérifier si le lien/pièce jointe a été ouvert'
+    description: 'Chercher les accès web et les exécutions de fichiers post-réception'
+    expected_finding: 'Utilisateur a cliqué sur le lien ou ouvert la pièce jointe'
+    critical: true
+    escalate_if_found: true
+
+  - id: 3
+    title: 'Analyser la pièce jointe'
+    description: 'Soumettre la pièce jointe à une sandbox pour analyse dynamique'
+    expected_finding: 'Macro malveillante, exploit ou dropper détecté'
+    critical: true
+    escalate_if_found: true
+
+  - id: 4
+    title: 'Identifier les autres destinataires'
+    description: 'Chercher le même email envoyé à d autres utilisateurs'
+    expected_finding: 'Campagne de phishing ciblant plusieurs utilisateurs'
+    critical: false
+
+  - id: 5
+    title: 'Vérifier la compromission du poste'
+    description: 'Si le lien/fichier a été ouvert, chercher des IOCs sur le endpoint'
+    expected_finding: 'Exécution suspecte ou C2 callback après le clic'
+    critical: true
+    escalate_if_found: true
+
+remediation:
+  immediate: ['Bloquer l expéditeur et le domaine', 'Supprimer l email de toutes les boîtes', 'Isoler endpoints compromis']
+  short_term: ['Reset des credentials des utilisateurs impactés', 'Scan complet endpoints', 'Notification aux utilisateurs']
+  long_term: ['Renforcer filtrage email (SPF/DKIM/DMARC)', 'Formation sensibilisation phishing', 'Déployer sandbox email']
