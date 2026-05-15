@@ -13,6 +13,32 @@ L’application rassemble un flux de travail orienté sécurité opérationnelle
 - génération de rapports et de synthèses exécutives;
 - interface web React pour visualiser les alertes, timelines, clusters et recommandations.
 
+## Captures d’écran
+
+Les images ci-dessous proviennent du dossier `photo-app/` et illustrent les écrans principaux de l’application.
+
+### Dashboard et détail d’alerte
+
+![Dashboard](photo-app/dashboard.png)
+
+![Détail alerte](photo-app/details-alert.png)
+
+### Visualisation et analyse
+
+![Clustering](photo-app/cluster-page.png)
+
+![Timeline](photo-app/timeline-page.png)
+
+![MITRE Heatmap](photo-app/heatmap-mittre-page.png)
+
+### Playbooks et assistant SOC
+
+![Playbook](photo-app/playbook-page.png)
+
+![Playbook 2](photo-app/playbook-page-2.png)
+
+![Chat SOC](photo-app/soc-chat-page.png)
+
 ## Fonctionnalités
 
 - Authentification basée sur Elastic.
