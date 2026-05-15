@@ -1,10 +1,10 @@
 # SOC Assistant
 
-SOC Assistant est une plateforme d’aide à l’analyse SOC qui combine **Elastic Security**, **RAG**, **MITRE ATT&CK** et **Groq** pour accélérer la qualification des alertes, proposer des playbooks adaptés et générer des rapports exploitables par un analyste.
+SOC Assistant est une plateforme d’analyse SOC qui combine **Elastic Security**, **RAG**, **MITRE ATT&CK** et **Groq** pour accélérer la qualification des alertes, recommander des playbooks et générer des rapports exploitables.
 
 ## Aperçu
 
-Le projet centralise un flux de travail orienté sécurité opérationnelle:
+L’application rassemble un flux de travail orienté sécurité opérationnelle:
 
 - ingestion et consultation d’alertes Elastic Security;
 - analyse assistée par IA pour résumer et contextualiser une alerte;
@@ -13,25 +13,15 @@ Le projet centralise un flux de travail orienté sécurité opérationnelle:
 - génération de rapports et de synthèses exécutives;
 - interface web React pour visualiser les alertes, timelines, clusters et recommandations.
 
-## Pourquoi ce projet est intéressant pour un CV
-
-Ce projet montre une capacité à concevoir une solution complète, du backend à l’interface, avec des briques modernes de cybersécurité et d’IA. Il met en avant:
-
-- l’intégration d’un SIEM et d’un moteur de recherche vectoriel;
-- l’orchestration d’un pipeline IA pour l’analyse d’incidents;
-- la structuration de playbooks de réponse à incident;
-- la création d’une interface utilisateur claire pour les opérations SOC;
-- la gestion propre des variables d’environnement et des secrets.
-
-## Fonctionnalités principales
+## Fonctionnalités
 
 - Authentification basée sur Elastic.
-- Tableau de bord d’alertes avec filtres et détail d’incident.
-- Analyse automatique d’alertes avec contexte MITRE ATT&CK.
+- Tableau de bord d’alertes avec filtres et vue détaillée.
+- Analyse automatique des alertes avec contexte MITRE ATT&CK.
 - Playbooks de réponse stockés en YAML.
 - Moteur RAG pour retrouver le playbook le plus pertinent.
 - Clustering des alertes pour regrouper des incidents similaires.
-- Génération de rapports pour support opérationnel ou direction.
+- Génération de rapports pour l’exploitation opérationnelle.
 - Chatbot SOC pour explorer les alertes et guider l’analyste.
 
 ## Architecture
@@ -49,14 +39,14 @@ Ce projet montre une capacité à concevoir une solution complète, du backend �
 
 ## Installation
 
-### 1. Pré-requis
+### Prérequis
 
 - Python 3.10+.
 - Node.js 18+.
 - Un cluster Elasticsearch accessible.
 - Une clé API Groq.
 
-### 2. Backend
+### Backend
 
 ```bash
 python -m venv venv
@@ -76,7 +66,7 @@ Renseignez les valeurs réelles dans `.env`, puis lancez l’API:
 python backend/main.py
 ```
 
-### 3. Frontend
+### Frontend
 
 ```bash
 cd frontend
@@ -96,17 +86,7 @@ Variables importantes:
 - `ELASTIC_CA_CERT`
 - `GROQ_API_KEY`
 - `GROQ_MODEL`
-- `VITE_API_BASE_URL` côté frontend si vous déployez l’API ailleurs que `localhost`
-
-## Résumé prêt pour GitHub / CV
-
-Vous pouvez réutiliser cette description courte dans votre profil GitHub ou votre CV:
-
-> SOC Assistant is an AI-powered SOC platform that combines Elastic Security, RAG, MITRE ATT&CK mapping, and Groq LLMs to help analysts triage alerts, retrieve relevant playbooks, generate incident reports, and visualize security operations through a modern web interface.
-
-Version plus courte pour CV:
-
-> Développement d’une plateforme SOC assistée par IA pour l’analyse d’alertes Elastic, la recommandation de playbooks et la génération automatique de rapports.
+- `VITE_API_BASE_URL` côté frontend si l’API n’est pas servie en local.
 
 ## Sécurité
 
