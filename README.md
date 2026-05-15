@@ -17,27 +17,27 @@ L’application rassemble un flux de travail orienté sécurité opérationnelle
 
 Les images ci-dessous proviennent du dossier `photo-app/` et illustrent les écrans principaux de l’application.
 
-### Dashboard et détail d’alerte
+<table>
+	<tr>
+		<td align="center"><img src="photo-app/dashboard.png" alt="Dashboard" width="320"></td>
+		<td align="center"><img src="photo-app/details-alert.png" alt="Détail alerte" width="320"></td>
+	</tr>
+	<tr>
+		<td align="center"><img src="photo-app/cluster-page.png" alt="Clustering" width="320"></td>
+		<td align="center"><img src="photo-app/timeline-page.png" alt="Timeline" width="320"></td>
+	</tr>
+	<tr>
+		<td align="center"><img src="photo-app/heatmap-mittre-page.png" alt="MITRE Heatmap" width="320"></td>
+		<td align="center"><img src="photo-app/soc-chat-page.png" alt="Chat SOC" width="320"></td>
+	</tr>
+</table>
 
-![Dashboard](photo-app/dashboard.png)
-
-![Détail alerte](photo-app/details-alert.png)
-
-### Visualisation et analyse
-
-![Clustering](photo-app/cluster-page.png)
-
-![Timeline](photo-app/timeline-page.png)
-
-![MITRE Heatmap](photo-app/heatmap-mittre-page.png)
-
-### Playbooks et assistant SOC
-
-![Playbook](photo-app/playbook-page.png)
-
-![Playbook 2](photo-app/playbook-page-2.png)
-
-![Chat SOC](photo-app/soc-chat-page.png)
+<table>
+	<tr>
+		<td align="center"><img src="photo-app/playbook-page.png" alt="Playbook" width="320"></td>
+		<td align="center"><img src="photo-app/playbook-page-2.png" alt="Playbook 2" width="320"></td>
+	</tr>
+</table>
 
 ## Fonctionnalités
 
